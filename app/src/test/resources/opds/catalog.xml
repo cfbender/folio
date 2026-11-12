@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:opds="http://opds-spec.org/2010/catalog" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <id>urn:booklore:catalog</id>
+  <title>Grimmory Catalog</title>
+  <updated>2026-11-12T01:23:51.093522007Z</updated>
+  <link rel="self" href="/api/v1/opds/catalog?page=1&amp;size=2" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <link rel="start" href="/api/v1/opds" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+  <link rel="search" type="application/opensearchdescription+xml" title="Search" href="/api/v1/opds/search.opds"/>
+  <opensearch:totalResults>3</opensearch:totalResults>
+  <opensearch:startIndex>1</opensearch:startIndex>
+  <opensearch:itemsPerPage>2</opensearch:itemsPerPage>
+  <link rel="first" href="/api/v1/opds/catalog?page=1&amp;size=2" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <link rel="next" href="/api/v1/opds/catalog?page=2&amp;size=2" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <link rel="last" href="/api/v1/opds/catalog?page=2&amp;size=2" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <entry>
+    <title>Moby Dick; Or, The Whale</title>
+    <id>urn:booklore:book:1</id>
+    <updated>2026-11-12T01:23:37Z</updated>
+    <author><name>Herman Melville</name></author>
+    <dc:language>en</dc:language>
+    <category term="Sea stories"/>
+    <category term="Mentally ill -- Fiction"/>
+    <category term="Psychological fiction"/>
+    <category term="Ship captains -- Fiction"/>
+    <category term="Ahab, Captain (Fictitious character) -- Fiction"/>
+    <category term="Adventure stories"/>
+    <category term="Whaling ships -- Fiction"/>
+    <category term="Whales -- Fiction"/>
+    <category term="Whaling -- Fiction"/>
+    <link href="/api/v1/opds/1/download?fileId=1" rel="http://opds-spec.org/acquisition" type="application/epub+zip" title="EPUB"/>
+    <link rel="http://opds-spec.org/image" href="/api/v1/opds/1/cover?2026-11-12T01:23:37Z" type="image/jpeg"/>
+    <link rel="http://opds-spec.org/image/thumbnail" href="/api/v1/opds/1/cover?2026-11-12T01:23:37Z" type="image/jpeg"/>
+  </entry>
+  <entry>
+    <title>Alice&apos;s Adventures in Wonderland</title>
+    <id>urn:booklore:book:2</id>
+    <updated>2026-11-12T01:23:37Z</updated>
+    <author><name>Lewis Carroll</name></author>
+    <dc:language>en</dc:language>
+    <category term="Children&apos;s stories"/>
+    <category term="Fantasy fiction"/>
+    <category term="Alice (Fictitious character from Carroll) -- Juvenile fiction"/>
+    <category term="Imaginary places -- Juvenile fiction"/>
+    <link href="/api/v1/opds/2/download?fileId=2" rel="http://opds-spec.org/acquisition" type="application/epub+zip" title="EPUB"/>
+    <link rel="http://opds-spec.org/image" href="/api/v1/opds/2/cover?2026-11-12T01:23:37Z" type="image/jpeg"/>
+    <link rel="http://opds-spec.org/image/thumbnail" href="/api/v1/opds/2/cover?2026-11-12T01:23:37Z" type="image/jpeg"/>
+  </entry>
+</feed>

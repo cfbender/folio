@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:opds="http://opds-spec.org/2010/catalog">
+  <id>urn:booklore:root</id>
+  <title>Grimmory Catalog</title>
+  <updated>2026-11-12T01:23:51.257199884Z</updated>
+  <link rel="self" href="/api/v1/opds" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+  <link rel="start" href="/api/v1/opds" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+  <link rel="search" type="application/opensearchdescription+xml" title="Search" href="/api/v1/opds/search.opds"/>
+  <entry>
+    <title>All Books</title>
+    <id>urn:booklore:catalog:all</id>
+    <updated>2026-11-12T01:23:51.257235077Z</updated>
+    <link rel="subsection" href="/api/v1/opds/catalog?page=1&amp;size=50" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+    <content type="text">Browse all available books</content>
+  </entry>
+  <entry>
+    <title>Recently Added</title>
+    <id>urn:booklore:catalog:recent</id>
+    <updated>2026-11-12T01:23:51.257312989Z</updated>
+    <link rel="subsection" href="/api/v1/opds/recent?page=1&amp;size=50" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+    <content type="text">Recently added books</content>
+  </entry>
+  <entry>
+    <title>Libraries</title>
+    <id>urn:booklore:navigation:libraries</id>
+    <updated>2026-11-12T01:23:51.257327105Z</updated>
+    <link rel="subsection" href="/api/v1/opds/libraries" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+    <content type="text">Browse books by library</content>
+  </entry>
+  <entry>
+    <title>Shelves</title>
+    <id>urn:booklore:navigation:shelves</id>
+    <updated>2026-11-12T01:23:51.257333088Z</updated>
+    <link rel="subsection" href="/api/v1/opds/shelves" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+    <content type="text">Browse your personal shelves</content>
+  </entry>
+  <entry>
+    <title>Magic Shelves</title>
+    <id>urn:booklore:navigation:magic-shelves</id>
+    <updated>2026-11-12T01:23:51.257336763Z</updated>
+    <link rel="subsection" href="/api/v1/opds/magic-shelves" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+    <content type="text">Browse your smart, dynamic shelves</content>
+  </entry>
+  <entry>
+    <title>Authors</title>
+    <id>urn:booklore:navigation:authors</id>
+    <updated>2026-11-12T01:23:51.257358617Z</updated>
+    <link rel="subsection" href="/api/v1/opds/authors" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+    <content type="text">Browse books by author</content>
+  </entry>
+  <entry>
+    <title>Series</title>
+    <id>urn:booklore:navigation:series</id>
+    <updated>2026-11-12T01:23:51.257367987Z</updated>
+    <link rel="subsection" href="/api/v1/opds/series" type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+    <content type="text">Browse books by series</content>
+  </entry>
+  <entry>
+    <title>Surprise Me</title>
+    <id>urn:booklore:catalog:surprise</id>
+    <updated>2026-11-12T01:23:51.257372999Z</updated>
+    <link rel="subsection" href="/api/v1/opds/surprise" type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+    <content type="text">25 random books from the catalog</content>
+  </entry>
+</feed>

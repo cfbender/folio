@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Prepares a fresh Amp orb to build and test Folio: a JDK, the Android SDK, and warm Gradle caches.
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+step() { printf '\n==> %s (%ss)\n' "$1" "$SECONDS"; }
+
+SDK="${ANDROID_HOME:-$HOME/android-sdk}"
+CMDLINE_TOOLS_ZIP="https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip"
+
+step "JDK"
+if ! command -v javac >/dev/null || ! command -v unzip >/dev/null; then
+  sudo apt-get update -qq
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq openjdk-21-jdk-headless unzip curl
+fi
+
+step "Android command-line tools"
+if [ ! -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+  tmp="$(mktemp -d)"
+  curl -fsSL "$CMDLINE_TOOLS_ZIP" -o "$tmp/tools.zip"
+  unzip -q "$tmp/tools.zip" -d "$tmp"
+  mkdir -p "$SDK/cmdline-tools"
+  rm -rf "$SDK/cmdline-tools/latest"
+  mv "$tmp/cmdline-tools" "$SDK/cmdline-tools/latest"
+  rm -rf "$tmp"
+fi
+
+step "Android SDK packages"
+# sdkmanager closes the pipe once it has its answers, which must not fail the script.
+(yes || true) | "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" --licenses >/dev/null 2>&1
+if [ ! -d "$SDK/platforms/android-37.0" ] || [ ! -d "$SDK/build-tools/36.0.0" ] || [ ! -d "$SDK/platform-tools" ]; then
+  "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" \
+    "platform-tools" "platforms;android-37.0" "build-tools;36.0.0" >/dev/null 2>&1
+fi
+[ -f local.properties ] || echo "sdk.dir=$SDK" > local.properties
+
+step "Gradle dependencies"
+# Compiling the app and its tests downloads Gradle itself and every dependency.
+./gradlew --console=plain -q :app:compileDebugUnitTestKotlin
+
+step "done"

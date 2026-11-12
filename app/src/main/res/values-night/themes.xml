@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.Folio" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF16130F</item>
+    </style>
+</resources>

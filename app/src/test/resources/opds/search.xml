@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Grimmory</ShortName>
+  <Description>Search Grimmory catalog</Description>
+  <Url type="application/atom+xml;profile=opds-catalog;kind=acquisition"
+       template="/api/v1/opds/catalog?q={searchTerms}"/>
+</OpenSearchDescription>
