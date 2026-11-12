@@ -32,6 +32,14 @@ All under `app/src/main/java/dev/cfbender/folio/`:
 
 A fresh machine needs JDK 21 and the Android SDK; `.agents/setup` installs both.
 
+## CI and releases
+
+`.github/workflows/ci.yml` runs the tests and lint on pushes to `main` and on pull requests.
+
+`.github/workflows/release.yml` runs the same checks, then builds a signed release APK. Pushing a `v*` tag publishes it as a GitHub Release, with the tag as `versionName` and the workflow run number as `versionCode`. A manual run only keeps the APK as a workflow artifact.
+
+The signing key comes from four repository secrets: `KEYSTORE_BASE64` (the keystore file, base64-encoded), `KEYSTORE_PASSWORD`, `KEY_ALIAS`, and `KEY_PASSWORD`. Gradle reads the key from `FOLIO_KEYSTORE_FILE`, `FOLIO_KEYSTORE_PASSWORD`, `FOLIO_KEY_ALIAS`, and `FOLIO_KEY_PASSWORD`; without `FOLIO_KEYSTORE_FILE`, `:app:assembleRelease` produces an unsigned APK.
+
 ## Tests
 
 - Tests run against the real screens through Compose's test rule under Robolectric with native

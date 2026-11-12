@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.roborazzi)
 }
 
+// The release key stays out of the repo: the release workflow supplies it through the environment.
+// Without FOLIO_KEYSTORE_FILE the release APK is left unsigned.
+val releaseKeystore = providers.environmentVariable("FOLIO_KEYSTORE_FILE").orNull
+
 android {
     namespace = "dev.cfbender.folio"
     compileSdk = 37
@@ -14,12 +18,25 @@ android {
         applicationId = "dev.cfbender.folio"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        // The release workflow overrides both; see .github/workflows/release.yml.
+        versionCode = providers.gradleProperty("folio.versionCode").map(String::toInt).getOrElse(1)
+        versionName = providers.gradleProperty("folio.versionName").getOrElse("0.1.0")
+    }
+
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = providers.environmentVariable("FOLIO_KEYSTORE_PASSWORD").get()
+                keyAlias = providers.environmentVariable("FOLIO_KEY_ALIAS").get()
+                keyPassword = providers.environmentVariable("FOLIO_KEY_PASSWORD").get()
+            }
+        }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))

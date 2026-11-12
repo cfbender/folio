@@ -1,0 +1,82 @@
+name: Release
+
+# A v* tag builds a signed APK and publishes it as a GitHub Release.
+# A manual run builds the signed APK and keeps it as a workflow artifact only.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  release:
+    name: Signed release APK
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Decode the signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository secret $name is not set; see AGENTS.md."
+              exit 1
+            fi
+          done
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.keystore"
+
+      # A tag v1.2.3 becomes versionName 1.2.3. The run number gives every release a higher
+      # versionCode than the one before, which Android requires to install an update.
+      - name: Build the release APK
+        env:
+          FOLIO_KEYSTORE_FILE: ${{ runner.temp }}/release.keystore
+          FOLIO_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          FOLIO_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          FOLIO_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          args=("-Pfolio.versionCode=$GITHUB_RUN_NUMBER")
+          name="folio-run-$GITHUB_RUN_NUMBER"
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            args+=("-Pfolio.versionName=${GITHUB_REF_NAME#v}")
+            name="folio-${GITHUB_REF_NAME#v}"
+          fi
+          ./gradlew :app:assembleRelease --console=plain "${args[@]}"
+          cp app/build/outputs/apk/release/app-release.apk "$name.apk"
+          echo "APK=$name.apk" >> "$GITHUB_ENV"
+
+      - name: Verify the signature
+        run: |
+          apksigner="$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n 1)"
+          "$apksigner" verify --print-certs "$APK"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: folio-release
+          path: ${{ env.APK }}
+          if-no-files-found: error
+
+      - name: Publish the GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "$APK" --verify-tag --generate-notes --title "Folio ${GITHUB_REF_NAME#v}"
